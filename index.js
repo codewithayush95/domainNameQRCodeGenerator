@@ -6,6 +6,8 @@
 import inquirer from "inquirer";
 import qr from 'qr-image';
 import fs from 'fs';
+import qrcodeTerminal from 'qrcode-terminal'; // Import the qrcode-terminal package
+
 
 inquirer.prompt({
     message: "Type URL Here",
@@ -13,7 +15,12 @@ inquirer.prompt({
 }).then((answers) => {
     const url = answers.URL;
     let qr_svg = qr.image(url);
-    qr_svg.pipe(fs.createWriteStream(qr_img.png));
+    qr_svg.pipe(fs.createWriteStream("qr_img.png"));
+
+    // Generate QR code as ASCII art and print to terminal
+    qrcodeTerminal.generate(url, { small: true }, function (qrcode) {
+        console.log(qrcode); // Print QR code as ASCII art
+    });
 
     fs.writeFile("URl.txt",url,(err)=>{
         if(err) throw err;
